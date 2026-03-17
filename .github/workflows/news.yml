@@ -1,18 +1,26 @@
-name: Daily News Digest
+name: Smart News Digest
 
 on:
   schedule:
-    - cron: "0 23 * * *"  # UTC 23:00 = 北京时间 7:00 (UTC+8)
-  workflow_dispatch:      # 允许手动测试
+    - cron: "0 23 * * *"  # 北京时间 7:00
+  workflow_dispatch:
 
 jobs:
   send-news:
     runs-on: ubuntu-latest
     steps:
-      - name: Send News via ServerChan
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          
+      - name: Install dependencies
+        run: pip install feedparser requests google-generativeai
+        
+      - name: Run news fetcher
         env:
           SCT_KEY: ${{ secrets.SCT_KEY }}
-        run: |
-          curl "https://sctapi.ftqq.com/${SCT_KEY}.send" \
-            -d "title=【AI·科技·财经晨报】$(date +%Y-%m-%d)" \
-            -d "desp=📌 **今日精选**%0A%0A🔹 [全球AI最新进展](https://rsshub.app/36kr/news/latest)%0A（来源：36氪）%0A%0A🔹 [TechCrunch 科技头条](https://rsshub.app/techcrunch)%0A（来源：TechCrunch）%0A%0A🔹 [华尔街日报财经速递](https://rsshub.app/wsj/latest)%0A（来源：WSJ）%0A%0A---%0A💡 数据来自 RSSHub 公开聚合，每日自动更新"
+       # GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}  # 可选
+        run: python main.py
