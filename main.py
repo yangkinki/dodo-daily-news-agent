@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 # 配置
 SCT_KEY = os.environ["SCT_KEY"]
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")  # 可选
+# GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")  # 可选
 
 # 专题配置：名称 -> RSS源
 TOPICS = {
@@ -14,6 +14,7 @@ TOPICS = {
     "财经要闻": "https://rsshub.app/wsj/latest"
 }
 
+'''
 def get_ai_summary(text):
     """使用 Gemini 生成总结（可选）"""
     if not GEMINI_API_KEY or not text:
@@ -30,6 +31,7 @@ def get_ai_summary(text):
         return resp.json()['candidates'][0]['content']['parts'][0]['text'].strip()
     except:
         return "（AI总结失败）"
+'''
 
 def fetch_news():
     content_lines = []
@@ -44,13 +46,13 @@ def fetch_news():
                 title = entry.title.replace("\n", " ")
                 summary = entry.get('summary', '')[:300] or "暂无摘要"
                 link = entry.link
-                ai_summary = get_ai_summary(summary) if GEMINI_API_KEY else "（未启用AI总结）"
+        #        ai_summary = get_ai_summary(summary) if GEMINI_API_KEY else "（未启用AI总结）"
                 
                 items.append(
                     f"🔹 **【{topic}】**\n"
                     f"**标题**：{title}\n"
                     f"**摘要**：{summary}\n"
-                    f"**AI总结**：{ai_summary}\n"
+         #           f"**AI总结**：{ai_summary}\n"
                     f"👉 [查看详情]({link})\n"
                 )
         if items:
