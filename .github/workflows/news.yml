@@ -16,8 +16,8 @@ jobs:
         with:
           python-version: '3.10'
           
-      - name: Install dependencies
-        run: pip install feedparser requests google-generativeai
+     # - name: Install dependencies
+    #    run: pip install feedparser requests google-generativeai
         
       - name: Run news fetcher
         env:
