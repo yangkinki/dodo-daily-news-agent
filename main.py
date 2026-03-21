@@ -265,11 +265,19 @@ class PushService:
                 logger.warning(f"📤 Server酱非JSON响应: {resp.text[:200]}")
                 result = {}
             
-            if result.get("errno") == 0:
+            # Server酱返回的错误码判断
+            # 新版API：成功时 code=0, data.error='SUCCESS', data.errno=0
+            code = result.get("code")
+            data = result.get("data", {})
+            data_errno = data.get("errno")
+            data_error = data.get("error", "")
+            
+            if code == 0 and data_error == "SUCCESS":
                 logger.info("✅ 微信推送成功")
+                logger.info(f"   推送ID: {data.get('pushid', 'N/A')}")
                 return True
             else:
-                error_msg = result.get('errmsg', '未知错误')
+                error_msg = result.get('message') or data_error or '未知错误'
                 logger.error(f"❌ 微信推送失败: {error_msg}")
                 logger.error(f"   完整响应: {result}")
                 return False
@@ -350,7 +358,7 @@ def main():
     logger.info("=" * 50)
     
     # 检查是否使用测试模式
-    test_mode = os.environ.get('TEST_MODE', 'false').lower() == 'true'
+    test_mode = os.environ.get('TEST_MODE', 'false').lower() == 'false'
     
     try:
         # 加载配置
