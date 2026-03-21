@@ -32,7 +32,11 @@ jobs:
         env:
           SCT_KEY: ${{ secrets.SCT_KEY }}
           BARK_KEY: ${{ secrets.BARK_KEY }}  # 可选
-        run: python main.py
+        run: |
+          echo "=== 开始执行新闻抓取 ==="
+          echo "SCT_KEY 是否配置: ${{ secrets.SCT_KEY != '' }}"
+          python main.py
+          echo "=== 执行完成 ==="
         
       - name: Commit cache changes
         run: |
