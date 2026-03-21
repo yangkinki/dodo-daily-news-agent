@@ -1,37 +1,31 @@
 # 新闻源配置
 news_sources:
-  # ===== 国内可访问的源（使用国内RSSHub镜像）=====
-  - name: "知乎热榜"
+  # ===== 国内可访问的稳定源 =====
+  - name: "知乎日报"
     category: "热门话题"
-    url: "https://rsshub.rssforever.com/zhihu/hot"
+    url: "https://www.zhihu.com/rss"
     enabled: true
     max_items: 3
 
-  - name: "微博热搜"
-    category: "热门话题"
-    url: "https://rsshub.rssforever.com/weibo/search/hot"
+  - name: "Solidot"
+    category: "科技资讯"
+    url: "https://www.solidot.org/index.rss"
     enabled: true
     max_items: 3
 
-  - name: "掘金前端"
-    category: "前端技术"
-    url: "https://rsshub.rssforever.com/juejin/category/frontend"
+  - name: "Phoronix"
+    category: "开源技术"
+    url: "https://www.phoronix.com/rss.php"
     enabled: true
     max_items: 2
 
-  - name: "InfoQ推荐"
-    category: "技术资讯"
-    url: "https://rsshub.rssforever.com/infoq/recommend"
+  - name: "TechCrunch"
+    category: "国际科技"
+    url: "https://techcrunch.com/feed/"
     enabled: true
     max_items: 2
 
-  - name: "少数派"
-    category: "数字生活"
-    url: "https://rsshub.rssforever.com/sspai/index"
-    enabled: true
-    max_items: 2
-
-  # ===== 备用源（默认关闭）=====
+  # ===== 需要通过RSSHub的源（国内可能需代理）=====
   - name: "AI前沿"
     category: "人工智能"
     url: "https://rsshub.app/leiphone/tag/人工智能"
