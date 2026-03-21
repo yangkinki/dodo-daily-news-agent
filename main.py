@@ -358,7 +358,7 @@ def main():
     logger.info("=" * 50)
     
     # 检查是否使用测试模式
-    test_mode = os.environ.get('TEST_MODE', 'false').lower() == 'false'
+    test_mode = os.environ.get('TEST_MODE', 'false').lower() == 'true'
     
     try:
         # 加载配置
