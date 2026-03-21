@@ -25,6 +25,38 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# 测试数据（用于本地测试流程）
+TEST_NEWS = [
+    {
+        "title": "OpenAI发布GPT-5预览版，多模态能力大幅提升",
+        "summary": "OpenAI今日发布了GPT-5的预览版本，新版本在图像理解、视频分析和代码生成方面都有显著改进，支持更长的上下文窗口...",
+        "link": "https://example.com/news/1",
+        "category": "人工智能",
+        "source_name": "AI前沿"
+    },
+    {
+        "title": "苹果WWDC 2026宣布：AI功能将成iOS 20核心",
+        "summary": "苹果公司宣布WWDC 2026开发者大会将于6月举行，预计将发布iOS 20，其中AI驱动的Siri升级将是最大亮点...",
+        "link": "https://example.com/news/2",
+        "category": "科技动态",
+        "source_name": "科技早报"
+    },
+    {
+        "title": "美联储维持利率不变，科技股集体上涨",
+        "summary": "美联储最新利率决议维持基准利率不变，市场反应积极，纳斯达克指数上涨2.3%，大型科技股普遍走高...",
+        "link": "https://example.com/news/3",
+        "category": "财经要闻",
+        "source_name": "财经观察"
+    },
+    {
+        "title": "Python 3.14发布，性能提升40%",
+        "summary": "Python基金会正式发布Python 3.14版本，新版本通过改进解释器和内存管理，整体性能提升约40%...",
+        "link": "https://example.com/news/4",
+        "category": "开源技术",
+        "source_name": "开源中国"
+    }
+]
+
 
 class NewsCache:
     """新闻去重缓存"""
@@ -204,23 +236,49 @@ class PushService:
     
     def send_server_chan(self, title: str, content: str) -> bool:
         """推送到Server酱（微信）"""
+        # 检查key是否配置（只显示前5位用于调试）
         if not self.sct_key:
-            logger.warning("未配置 SCT_KEY，跳过微信推送")
+            logger.error("❌ 未配置 SCT_KEY，跳过微信推送")
+            logger.error("   请检查 GitHub Secrets 是否设置了 SCT_KEY")
             return False
         
+        # 显示key的前5位用于调试（安全考虑不显示完整key）
+        key_preview = self.sct_key[:5] + "..." if len(self.sct_key) > 5 else "***"
+        logger.info(f"📤 使用 SCT_KEY: {key_preview} 进行推送")
+        
         try:
+            logger.info(f"📤 推送标题: {title[:50]}...")
+            logger.info(f"📤 推送内容长度: {len(content)} 字符")
+            
             resp = requests.post(
                 f"https://sctapi.ftqq.com/{self.sct_key}.send",
                 data={"title": title, "desp": content},
                 timeout=30
             )
-            result = resp.json()
+            
+            logger.info(f"📤 Server酱响应状态码: {resp.status_code}")
+            
+            try:
+                result = resp.json()
+                logger.info(f"📤 Server酱响应: {result}")
+            except:
+                logger.warning(f"📤 Server酱非JSON响应: {resp.text[:200]}")
+                result = {}
+            
             if result.get("errno") == 0:
                 logger.info("✅ 微信推送成功")
                 return True
             else:
-                logger.error(f"❌ 微信推送失败: {result}")
+                error_msg = result.get('errmsg', '未知错误')
+                logger.error(f"❌ 微信推送失败: {error_msg}")
+                logger.error(f"   完整响应: {result}")
                 return False
+        except requests.exceptions.Timeout:
+            logger.error("❌ 微信推送超时 (30s)")
+            return False
+        except requests.exceptions.RequestException as e:
+            logger.error(f"❌ 微信推送请求异常: {e}")
+            return False
         except Exception as e:
             logger.error(f"❌ 微信推送异常: {e}")
             return False
@@ -291,6 +349,9 @@ def main():
     logger.info("开始执行新闻抓取任务")
     logger.info("=" * 50)
     
+    # 检查是否使用测试模式
+    test_mode = os.environ.get('TEST_MODE', 'false').lower() == 'true'
+    
     try:
         # 加载配置
         config = load_config()
@@ -299,14 +360,37 @@ def main():
         fetcher = NewsFetcher(config)
         pusher = PushService(config)
         
-        # 抓取新闻
-        news_by_category = fetcher.fetch_all()
+        if test_mode:
+            # 测试模式：使用本地测试数据
+            logger.info("🧪 运行测试模式，使用模拟数据")
+            news_by_category = {}
+            for item in TEST_NEWS:
+                category = item['category']
+                if category not in news_by_category:
+                    news_by_category[category] = []
+                # 添加时间戳
+                item['pub_time'] = datetime.now()
+                news_by_category[category].append(item)
+            logger.info(f"测试数据加载完成，共 {len(TEST_NEWS)} 条")
+        else:
+            # 正常模式：抓取新闻
+            news_by_category = fetcher.fetch_all()
         
         if not news_by_category:
             logger.info("今日没有新新闻，任务结束")
             return
         
+        # 打印要推送的内容预览
+        logger.info("\n" + "=" * 50)
+        logger.info("📋 推送内容预览：")
+        logger.info("=" * 50)
+        for category, items in news_by_category.items():
+            logger.info(f"\n📂 {category} ({len(items)}条)")
+            for item in items:
+                logger.info(f"  • {item['title'][:50]}...")
+        
         # 推送新闻
+        logger.info("\n" + "=" * 50)
         if pusher.send(news_by_category):
             # 标记为已发送
             for category, items in news_by_category.items():
