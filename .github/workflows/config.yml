@@ -1,52 +1,54 @@
 # 新闻源配置
 news_sources:
+  # ===== 国内可访问的源（使用国内RSSHub镜像）=====
+  - name: "知乎热榜"
+    category: "热门话题"
+    url: "https://rsshub.rssforever.com/zhihu/hot"
+    enabled: true
+    max_items: 3
+
+  - name: "微博热搜"
+    category: "热门话题"
+    url: "https://rsshub.rssforever.com/weibo/search/hot"
+    enabled: true
+    max_items: 3
+
+  - name: "掘金前端"
+    category: "前端技术"
+    url: "https://rsshub.rssforever.com/juejin/category/frontend"
+    enabled: true
+    max_items: 2
+
+  - name: "InfoQ推荐"
+    category: "技术资讯"
+    url: "https://rsshub.rssforever.com/infoq/recommend"
+    enabled: true
+    max_items: 2
+
+  - name: "少数派"
+    category: "数字生活"
+    url: "https://rsshub.rssforever.com/sspai/index"
+    enabled: true
+    max_items: 2
+
+  # ===== 备用源（默认关闭）=====
   - name: "AI前沿"
     category: "人工智能"
     url: "https://rsshub.app/leiphone/tag/人工智能"
-    enabled: true
+    enabled: false
     max_items: 2
 
   - name: "机器之心"
     category: "人工智能"
     url: "https://rsshub.app/jiqizhixin"
-    enabled: true
-    max_items: 2
-
-  - name: "量子位"
-    category: "人工智能"
-    url: "https://rsshub.app/qbitai"
-    enabled: true
-    max_items: 2
-
-  - name: "TechCrunch"
-    category: "国际科技"
-    url: "https://rsshub.app/techcrunch"
-    enabled: true
-    max_items: 2
-
-  - name: "The Verge"
-    category: "国际科技"
-    url: "https://rsshub.app/verge"
-    enabled: true
+    enabled: false
     max_items: 2
 
   - name: "36氪"
     category: "创业投资"
     url: "https://rsshub.app/36kr"
-    enabled: true
+    enabled: false
     max_items: 2
-
-  - name: "虎嗅"
-    category: "商业科技"
-    url: "https://rsshub.app/huxiu"
-    enabled: true
-    max_items: 2
-
-  - name: "阮一峰博客"
-    category: "技术周刊"
-    url: "https://rsshub.app/ruanyf/weekly"
-    enabled: true
-    max_items: 1
 
 # 推送配置
 push:
