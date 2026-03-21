@@ -1,0 +1,77 @@
+# 新闻源配置
+news_sources:
+  - name: "AI前沿"
+    category: "人工智能"
+    url: "https://rsshub.app/leiphone/tag/人工智能"
+    enabled: true
+    max_items: 2
+
+  - name: "机器之心"
+    category: "人工智能"
+    url: "https://rsshub.app/jiqizhixin"
+    enabled: true
+    max_items: 2
+
+  - name: "量子位"
+    category: "人工智能"
+    url: "https://rsshub.app/qbitai"
+    enabled: true
+    max_items: 2
+
+  - name: "TechCrunch"
+    category: "国际科技"
+    url: "https://rsshub.app/techcrunch"
+    enabled: true
+    max_items: 2
+
+  - name: "The Verge"
+    category: "国际科技"
+    url: "https://rsshub.app/verge"
+    enabled: true
+    max_items: 2
+
+  - name: "36氪"
+    category: "创业投资"
+    url: "https://rsshub.app/36kr"
+    enabled: true
+    max_items: 2
+
+  - name: "虎嗅"
+    category: "商业科技"
+    url: "https://rsshub.app/huxiu"
+    enabled: true
+    max_items: 2
+
+  - name: "阮一峰博客"
+    category: "技术周刊"
+    url: "https://rsshub.app/ruanyf/weekly"
+    enabled: true
+    max_items: 1
+
+# 推送配置
+push:
+  # Server酱 (微信推送)
+  server_chan:
+    enabled: true
+    # 从环境变量读取: SCT_KEY
+
+  #  Bark (iOS推送)
+  bark:
+    enabled: false
+    # 从环境变量读取: BARK_KEY
+
+# 抓取配置
+fetch:
+  # 只抓取多少小时内的新闻
+  hours_limit: 24
+  # 请求超时(秒)
+  timeout: 30
+  # 重试次数
+  retry: 3
+
+# 缓存配置
+cache:
+  # 缓存文件路径
+  file: "sent_news.json"
+  # 缓存保留天数
+  retention_days: 7
