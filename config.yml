@@ -7,6 +7,36 @@ news_sources:
     enabled: true
     max_items: 3
 
+      - name: "BBC NEWS"
+    category: "BBCNEWS"
+    url: "http://feeds.bbci.co.uk/news/world/rss.xml"
+    enabled: true
+    max_items: 3
+
+  - name: "CNN"
+    category: "CNN"
+    url: "http://rss.cnn.com/rss/cnn_world.rss"
+    enabled: true
+    max_items: 3
+
+  - name: "人民网"
+    category: "人民网"
+    url: "http://www.people.com.cn/rss/politics.xml"
+    enabled: true
+    max_items: 3
+
+    - name: "虎嗅网"
+    category: "虎嗅网"
+    url: "https://www.huxiu.com/rss"
+    enabled: true
+    max_items: 3
+
+    - name: "36氪"
+    category: "36氪"
+    url: "https://36kr.com/feed/"
+    enabled: true
+    max_items: 3
+
   - name: "Solidot"
     category: "科技资讯"
     url: "https://www.solidot.org/index.rss"
